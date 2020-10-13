@@ -1,0 +1,10 @@
+# Service config
+server:
+  servlet:
+    context-path: /service
+
+# Logging configuration.
+logging:
+  level:
+    org:
+      springframework: INFO
