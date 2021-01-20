@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @EnableHystrix
 @SpringBootApplication
-@RestController
 public class UserManagementSvcApplication {
 
 	public static void main(String[] args) {

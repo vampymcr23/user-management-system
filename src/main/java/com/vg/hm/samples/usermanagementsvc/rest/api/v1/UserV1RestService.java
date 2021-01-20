@@ -28,7 +28,6 @@ import java.util.List;
 @Path("/api/v1/users")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@EnableHystrix
 public class UserV1RestService {
 
     @Autowired
@@ -38,7 +37,7 @@ public class UserV1RestService {
     private APIValidator updateUserV1Validator;
 
     @Autowired
-    public UserService userService;
+    private UserService userService;
 
     /**
      * Returns list of users.
