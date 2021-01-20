@@ -15,7 +15,6 @@ import java.util.List;
 @Path("/api/v1/auto")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@EnableHystrix
 public class AutoRestService {
     @GET
     @Path("/makes")
