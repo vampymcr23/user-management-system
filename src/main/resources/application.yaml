@@ -8,3 +8,13 @@ logging:
   level:
     org:
       springframework: INFO
+management:
+  security:
+    enabled: false
+
+endpoints:
+  health:
+    id: health
+    path: /health
+    enabled: true
+    sensitive: false

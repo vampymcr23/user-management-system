@@ -1,7 +1,9 @@
 package com.vg.hm.samples.usermanagementsvc.service;
 
+import com.vg.hm.samples.usermanagementsvc.service.model.Make;
 import com.vg.hm.samples.usermanagementsvc.service.model.User;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -30,4 +32,18 @@ public interface UserService {
      * @return list of users.
      */
     List<User> getAllUsers();
+
+    /**
+     * Hystrix example
+     * @return message when executing the callback
+     * @throws InterruptedException
+     */
+    public String hello()throws InterruptedException;
+
+    /**
+     * Retrofit example
+     * @return list of car's makes
+     * @throws IOException
+     */
+    public List<Make>getMakes() throws IOException;
 }

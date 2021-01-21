@@ -1,11 +1,21 @@
 package com.vg.hm.samples.usermanagementsvc.service.impl;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.vg.hm.samples.usermanagementsvc.service.UserService;
+import com.vg.hm.samples.usermanagementsvc.service.VehicleAPIService;
+import com.vg.hm.samples.usermanagementsvc.service.model.Make;
+import com.vg.hm.samples.usermanagementsvc.service.model.MakesJson;
 import com.vg.hm.samples.usermanagementsvc.service.model.User;
+import com.vg.hm.samples.usermanagementsvc.util.VehicleAPIRetrofitClient;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import javax.ws.rs.NotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +27,8 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private Map<String, User> storage = new ConcurrentHashMap<>();
+    @Autowired
+    private VehicleAPIRetrofitClient retrofitClient;
 
     @Override
     public User getUserDetailsByAccount(String email) {
@@ -64,4 +76,25 @@ public class UserServiceImpl implements UserService {
         log.info("Listing all users!");
         return storage.values().stream().collect(Collectors.toList());
     }
+
+    @HystrixCommand(fallbackMethod = "fallback_hello", commandProperties = {@HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds", value = "1000")})
+     public String hello()throws InterruptedException{
+      Thread.sleep(3000);
+       return "Welcome Hystrix";
+     }
+     public String fallback_hello(){
+        return "Request fails. It takes long time to response";
+    }
+
+    @Override
+    public List<Make>getMakes() throws IOException {
+//        VehicleAPIService vehicleAPIService = vehicleAPIRetrofitClient.getRetrofit().create(VehicleAPIService.class);
+////        VehicleAPIService  = retrofit.create(VehicleAPIService.class);
+        Call<MakesJson> call = retrofitClient.getRetrofit().getAllMakes();
+        Response<MakesJson> response = call.execute();
+        MakesJson makes  = response.body();
+        List<Make> makeList= makes.getResults();
+        return makeList;
+    }
+
 }
