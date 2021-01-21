@@ -1,7 +1,5 @@
 package com.vg.hm.samples.usermanagementsvc.service.impl;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.vg.hm.samples.usermanagementsvc.service.VehicleAPIService;
 import com.vg.hm.samples.usermanagementsvc.service.VehicleService;
@@ -10,10 +8,7 @@ import com.vg.hm.samples.usermanagementsvc.service.model.MakesJson;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,15 +17,14 @@ import java.util.List;
 @Service
 public class VehicleServiceImpl implements VehicleService {
     @Autowired
-    VehicleAPIService vehicleRetrofitClient;
+    private VehicleAPIService vehicleRetrofitClient;
 
     @Override
     @HystrixCommand(fallbackMethod = "getDummyMakes")
     public List<Make> getMakes() throws IOException {
        log.info("Getting all makes...");
-        Call<MakesJson> call = vehicleRetrofitClient.getAllMakes();
-        Response<MakesJson> response = call.execute();
-        MakesJson makes  = response.body();
+        Response response = vehicleRetrofitClient.getAllMakes().execute();
+        MakesJson makes  = (MakesJson) response.body();
         List<Make> makeList= makes.getResults();
         return makeList;
     }
