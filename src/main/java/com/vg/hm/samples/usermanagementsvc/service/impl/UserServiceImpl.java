@@ -3,7 +3,6 @@ package com.vg.hm.samples.usermanagementsvc.service.impl;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.vg.hm.samples.usermanagementsvc.service.UserService;
-import com.vg.hm.samples.usermanagementsvc.service.VehicleAPIService;
 import com.vg.hm.samples.usermanagementsvc.service.model.Make;
 import com.vg.hm.samples.usermanagementsvc.service.model.MakesJson;
 import com.vg.hm.samples.usermanagementsvc.service.model.User;
@@ -77,19 +76,17 @@ public class UserServiceImpl implements UserService {
         return storage.values().stream().collect(Collectors.toList());
     }
 
-    @HystrixCommand(fallbackMethod = "fallback_hello", commandProperties = {@HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds", value = "1000")})
+    @HystrixCommand(fallbackMethod = "fallBack", commandProperties = {@HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds", value = "1000")})
      public String hello()throws InterruptedException{
       Thread.sleep(3000);
        return "Welcome Hystrix";
      }
-     public String fallback_hello(){
+     public String fallBack(){
         return "Request fails. It takes long time to response";
     }
 
     @Override
     public List<Make>getMakes() throws IOException {
-//        VehicleAPIService vehicleAPIService = vehicleAPIRetrofitClient.getRetrofit().create(VehicleAPIService.class);
-////        VehicleAPIService  = retrofit.create(VehicleAPIService.class);
         Call<MakesJson> call = retrofitClient.getRetrofit().getAllMakes();
         Response<MakesJson> response = call.execute();
         MakesJson makes  = response.body();

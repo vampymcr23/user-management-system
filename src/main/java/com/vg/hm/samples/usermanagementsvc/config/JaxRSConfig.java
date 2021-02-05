@@ -12,7 +12,6 @@ public class JaxRSConfig extends ResourceConfig {
 
     public JaxRSConfig() {
         log.info("Initializing Rest Services...");
-        packages("com.vg.hm.samples.usermanagementsvc");
         register(UserV1RestService.class);
         register(AutoRestService.class);
         log.info("UserV1RestService - Added!");
